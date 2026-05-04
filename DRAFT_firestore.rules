@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Validation Helpers ---
+    function isValidEvent(data) {
+      return data.keys().hasAll(['title', 'date', 'description', 'category']) &&
+             data.keys().size() == 4 && // Strict keys
+             data.title is string && data.title.size() <= 200 &&
+             data.date is string && data.date.size() <= 50 &&
+             data.description is string && data.description.size() <= 5000 &&
+             data.category in ['Worship', 'Youth', 'Community', 'Special'];
+    }
+
+    function isValidSermon(data) {
+      return data.keys().hasAll(['title', 'speaker', 'date', 'category']) &&
+             data.title is string && data.title.size() <= 200 &&
+             data.speaker is string && data.speaker.size() <= 200 &&
+             data.date is string && data.date.size() <= 50 &&
+             data.category is string && data.category.size() <= 100;
+    }
+
+    function isValidMember(data) {
+      return data.keys().hasAll(['name', 'role', 'email']) &&
+             data.name is string && data.name.size() <= 100 &&
+             data.role is string && data.role.size() <= 100 &&
+             data.email is string && data.email.size() <= 100;
+    }
+
+    // --- Collection Rules ---
+
+    match /events/{eventId} {
+      allow read: if true; // Publicly readable
+      allow create: if isSignedIn() && isValidEvent(incoming());
+      allow update: if isSignedIn() && isValidEvent(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /sermons/{sermonId} {
+      allow read: if true;
+      allow create: if isSignedIn() && isValidSermon(incoming());
+      allow update: if isSignedIn() && isValidSermon(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /members/{memberId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+  }
+}

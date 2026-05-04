@@ -1,0 +1,181 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        isInternalAdmin() ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function isInternalAdmin() {
+      return isSignedIn() && 
+             request.auth.token.email == 'tettehseth67@gmail.com' &&
+             request.auth.token.email_verified == true;
+    }
+
+    // --- Validation Helpers ---
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid == request.auth.uid &&
+             (data.role == 'member' || data.role == 'guest' || (data.role == 'admin' && isInternalAdmin())) &&
+             (!('preferences' in data) || data.preferences is map) &&
+             (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 200));
+    }
+
+    function isValidEvent(data) {
+      return data.keys().hasAll(['title', 'date', 'description', 'category', 'time']) &&
+             data.title is string && data.title.size() <= 200 &&
+             data.date is string && data.date.size() <= 50 &&
+             data.time is string && data.time.size() <= 50 &&
+             data.description is string && data.description.size() <= 10000 &&
+             data.category is string && data.category.size() <= 100 &&
+             (!('thumbnail' in data) || (data.thumbnail is string && data.thumbnail.size() <= 500)) &&
+             (!('priority' in data) || (data.priority is string && (data.priority == 'High' || data.priority == 'Medium' || data.priority == 'Low')));
+    }
+
+    function isValidSermon(data) {
+      return data.keys().hasAll(['title', 'speaker', 'date', 'category']) &&
+             data.title is string && data.title.size() <= 200 &&
+             data.speaker is string && data.speaker.size() <= 200 &&
+             data.date is string && data.date.size() <= 50 &&
+             data.category is string && data.category.size() <= 100 &&
+             (!('videoUrl' in data) || (data.videoUrl is string && data.videoUrl.size() <= 500)) &&
+             (!('thumbnail' in data) || (data.thumbnail is string && data.thumbnail.size() <= 500));
+    }
+
+    function isValidMember(data) {
+      return data.keys().hasAll(['name', 'role', 'email']) &&
+             data.name is string && data.name.size() <= 100 &&
+             data.role is string && data.role.size() <= 100 &&
+             data.email is string && data.email.size() <= 100 &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() <= 50));
+    }
+
+    function isValidRegistration(data) {
+      return data.keys().hasAll(['eventId', 'userName', 'userEmail', 'timestamp']) &&
+             (data.keys().size() == 4 || (data.keys().size() == 5 && 'userId' in data)) &&
+             data.eventId is string && data.eventId.size() <= 128 &&
+             data.userName is string && data.userName.size() <= 100 &&
+             data.userEmail is string && data.userEmail.size() <= 100 &&
+             (!('userId' in data) || (data.userId is string && data.userId.size() <= 128)) &&
+             data.timestamp == request.time;
+    }
+
+    function isValidDonation(data) {
+      return data.keys().hasAll(['userId', 'userName', 'userEmail', 'amount', 'category', 'timestamp', 'status']) &&
+             (data.userId == 'guest' || data.userId == request.auth.uid) &&
+             data.amount is number && data.amount > 0 &&
+             data.userName is string && data.userName.size() <= 100 &&
+             data.userEmail is string && data.userEmail.size() <= 100 &&
+             data.category is string && data.category.size() <= 500 &&
+             data.timestamp == request.time;
+    }
+
+    function isValidAuditLog(data) {
+      return data.keys().hasAll(['adminId', 'adminEmail', 'action', 'targetType', 'targetId', 'targetName', 'timestamp', 'details']) &&
+             data.adminId == request.auth.uid &&
+             data.timestamp == request.time;
+    }
+
+    function isValidPrayerRequest(data) {
+      return data.keys().hasAll(['name', 'request', 'timestamp']) &&
+             data.name is string && data.name.size() <= 100 &&
+             data.request is string && data.request.size() <= 1000 &&
+             (!('userId' in data) || (data.userId is string && data.userId.size() <= 128)) &&
+             data.timestamp == request.time;
+    }
+
+    function isValidDonationCategory(data) {
+      return data.keys().hasAll(['name']) &&
+             data.name is string && data.name.size() <= 100 &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 500)) &&
+             (!('isActive' in data) || data.isActive is bool) &&
+             (!('order' in data) || data.order is number);
+    }
+
+    // --- Collection Rules ---
+
+    match /events/{eventId} {
+      allow get: if true;
+      allow list: if true; 
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /sermons/{sermonId} {
+      allow get: if true;
+      allow list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /members/{memberId} {
+      allow get: if true;
+      allow list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /registrations/{regId} {
+      allow create: if isValidRegistration(incoming());
+      allow read: if isAdmin() || isInternalAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid); 
+    }
+
+    match /users/{userId} {
+      allow list: if isAdmin() || isInternalAdmin();
+      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin() || isInternalAdmin());
+      allow create: if isSignedIn() && isValidUser(incoming());
+      allow update: if isSignedIn() && (
+        (request.auth.uid == userId && (
+          // Allow self-update of non-role fields
+          !incoming().diff(existing()).affectedKeys().hasAny(['role']) ||
+          // Allow self-upgrade if internal admin email
+          (incoming().role == 'admin' && isInternalAdmin())
+        )) || 
+        isAdmin() || isInternalAdmin()
+      );
+    }
+
+    match /donations/{donationId} {
+      allow create: if (isSignedIn() || incoming().userId == 'guest') && isValidDonation(incoming());
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    match /donation_categories/{categoryId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /audit_logs/{logId} {
+      allow create: if isAdmin() && isValidAuditLog(incoming());
+      allow read: if isAdmin();
+    }
+
+    match /prayer_requests/{requestId} {
+      allow create: if isValidPrayerRequest(incoming());
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+    }
+  }
+}

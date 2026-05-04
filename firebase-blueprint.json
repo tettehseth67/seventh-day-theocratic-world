@@ -1,0 +1,170 @@
+{
+  "entities": {
+    "Event": {
+      "title": "Event",
+      "description": "A church event or activity",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string", "enum": ["Worship", "Youth", "Community", "Special", "Mission"] },
+        "priority": { "type": "string", "enum": ["High", "Medium", "Low"], "description": "Priority level of the event" },
+        "thumbnail": { "type": "string", "description": "URL for event thumbnail image" }
+      },
+      "required": ["title", "date", "description", "category"]
+    },
+    "Sermon": {
+      "title": "Sermon",
+      "description": "An archived sermon",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "speaker": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "videoUrl": { "type": "string" },
+        "category": { "type": "string" }
+      },
+      "required": ["title", "speaker", "date", "category"]
+    },
+    "Member": {
+      "title": "Member",
+      "description": "A congregation member",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" }
+      },
+      "required": ["name", "role", "email"]
+    },
+    "Registration": {
+      "title": "Registration",
+      "description": "An event registration",
+      "type": "object",
+      "properties": {
+        "eventId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string", "format": "email" },
+        "userId": { "type": "string", "description": "Optional user ID if logged in" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["eventId", "userName", "userEmail", "timestamp"]
+    },
+    "User": {
+      "title": "User",
+      "description": "App user with role and preferences",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "member", "guest"] },
+        "preferences": {
+          "type": "object",
+          "properties": {
+            "liturgyAlerts": { "type": "boolean" },
+            "donationReceipts": { "type": "boolean" },
+            "communityNews": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Donation": {
+      "title": "Donation",
+      "description": "A monetary contribution",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string", "format": "email" },
+        "amount": { "type": "number" },
+        "category": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["completed", "pending"] }
+      },
+      "required": ["userId", "userName", "amount", "timestamp", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Log of administrative actions",
+      "type": "object",
+      "properties": {
+        "adminId": { "type": "string" },
+        "adminEmail": { "type": "string" },
+        "action": { "type": "string", "enum": ["create", "update", "delete", "role_change"] },
+        "targetType": { "type": "string", "enum": ["event", "sermon", "member", "user", "donation"] },
+        "targetId": { "type": "string" },
+        "targetName": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "details": { "type": "string" }
+      },
+      "required": ["adminId", "adminEmail", "action", "targetType", "targetId", "targetName", "timestamp"]
+    },
+    "PrayerRequest": {
+      "title": "PrayerRequest",
+      "description": "A request for prayer",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "request": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "userId": { "type": "string", "description": "Optional user ID if logged in" }
+      },
+      "required": ["name", "request", "timestamp"]
+    },
+    "DonationCategory": {
+      "title": "DonationCategory",
+      "description": "A category for donations",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "order": { "type": "number" }
+      },
+      "required": ["name"]
+    }
+  },
+  "firestore": {
+    "events": {
+      "schema": "Event",
+      "description": "Collection of church events"
+    },
+    "sermons": {
+      "schema": "Sermon",
+      "description": "Collection of past sermons"
+    },
+    "members": {
+      "schema": "Member",
+      "description": "Public member directory"
+    },
+    "registrations": {
+      "schema": "Registration",
+      "description": "Event registrations"
+    },
+    "users": {
+      "schema": "User",
+      "description": "Application users and roles"
+    },
+    "donations": {
+      "schema": "Donation",
+      "description": "Collection of donations"
+    },
+    "audit_logs": {
+      "schema": "AuditLog",
+      "description": "Log of administrative actions"
+    },
+    "prayer_requests": {
+      "schema": "PrayerRequest",
+      "description": "Collection of prayer requests"
+    },
+    "donation_categories": {
+      "schema": "DonationCategory",
+      "description": "Customizable donation categories"
+    }
+  }
+}
