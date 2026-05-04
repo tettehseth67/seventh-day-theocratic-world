@@ -92,11 +92,11 @@ export default function EventsSection() {
                   
                   <div className="relative z-10 flex justify-between items-start">
                     <div className="space-y-4">
-                      <div className="bg-brand-gold/10 text-brand-gold px-4 py-1.5 rounded-full border border-brand-gold/20 inline-block">
-                         <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-                           {event.category}
-                         </span>
-                      </div>
+                    <div className="inline-block">
+                       <span className="bg-brand-gold/10 text-brand-gold px-4 py-2 rounded-xl border border-brand-gold/20 text-[10px] font-black uppercase tracking-[0.2em] shadow-sm backdrop-blur-sm group-hover:bg-brand-gold group-hover:text-white transition-all duration-500">
+                         {event.category}
+                       </span>
+                    </div>
                       <div className="flex items-baseline gap-2">
                          <span className="text-5xl md:text-6xl font-serif italic text-brand-ink">
                             {event.date.split('-')[2]}

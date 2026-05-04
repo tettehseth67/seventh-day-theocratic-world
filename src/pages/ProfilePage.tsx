@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, User, Shield, Calendar, Clock, ArrowRight, Star, Heart, Bookmark, Receipt, Edit2, Check, X, Loader2, TrendingUp, Bell, Mail, MessageSquare, Camera, Sparkles } from 'lucide-react';
+import { LogOut, User, Shield, Calendar, Clock, ArrowRight, Star, Heart, Bookmark, Receipt, Edit2, Check, X, Loader2, TrendingUp, Bell, Mail, MessageSquare, Camera, Sparkles, Church } from 'lucide-react';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
 import { getDonations, getRegistrations, getPrayerRequests } from '../services/dataService';
 import { Donation } from '../types';
@@ -125,42 +125,49 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="pb-40 bg-[#F3F3F3] min-h-screen selection:bg-brand-gold/20">
-      {/* Cinematic Identity Header */}
-      <div className="relative h-[560px] overflow-hidden">
+    <div className="pb-40 bg-[#FCFAFB] min-h-screen selection:bg-brand-gold/30">
+      {/* Cinematic Identity Header: Architectural Scale */}
+      <div className="relative h-[650px] overflow-hidden">
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=1600" 
+            src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=2000" 
             className="w-full h-full object-cover brightness-105"
             alt={CHURCH_NAME}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#F3F3F3] via-transparent to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#FCFAFB] via-transparent to-black/30" />
+          
+          {/* Sacred Overlays */}
           <motion.div 
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
-            className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-gold/10 via-transparent to-transparent"
+            animate={{ opacity: 0.6 }}
+            className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-gold/15 via-transparent to-transparent "
           />
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] opacity-10 pointer-events-none" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-end pb-12 relative z-10">
-          <div className="flex flex-col lg:flex-row justify-between items-end w-full gap-8">
-            <div className="flex flex-col md:flex-row items-center md:items-end gap-6">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 h-full flex items-end pb-24 relative z-10">
+          <div className="flex flex-col lg:flex-row justify-between items-end w-full gap-12">
+            <div className="flex flex-col md:flex-row items-center md:items-end gap-10">
               <motion.div 
-                initial={{ scale: 0.8, opacity: 0, rotate: -10 }}
-                animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
+                initial={{ scale: 0.8, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
                 className="relative group"
               >
-                <div className="w-28 h-28 md:w-36 md:h-36 rounded-[32px] bg-brand-ink border-4 border-white shadow-3xl flex items-center justify-center text-brand-gold overflow-hidden relative">
+                <div className="w-40 h-40 md:w-52 md:h-52 rounded-[60px] bg-brand-ink ring-8 ring-white/10 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] flex items-center justify-center text-brand-gold overflow-hidden relative">
                   {user.photoURL ? (
-                    <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                    <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[3s]" />
                   ) : (
-                    <User size={56} className="opacity-20 translate-y-3" />
+                    <div className="flex flex-col items-center">
+                       <User size={72} className="opacity-10 translate-y-4" />
+                       <Church size={30} className="text-brand-gold/30 mt-2" />
+                    </div>
                   )}
-                  <div className="absolute inset-0 bg-brand-olive/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm cursor-pointer">
-                    <Camera size={20} className="text-white" />
+                  <div className="absolute inset-0 bg-brand-olive/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-md cursor-pointer duration-700">
+                    <Camera size={24} className="text-white" />
                   </div>
                 </div>
+                
                 <motion.div 
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -171,15 +178,15 @@ export default function ProfilePage() {
                 </motion.div>
               </motion.div>
               
-              <div className="text-center md:text-left mb-6">
+              <div className="text-center md:text-left mb-10">
                 <motion.div 
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-brand-gold/10 border border-brand-gold/20 rounded-full mb-4 backdrop-blur-md"
+                  className="inline-flex items-center gap-3 px-5 py-2 bg-brand-gold/15 border border-brand-gold/30 rounded-full mb-6 backdrop-blur-md shadow-lg shadow-brand-gold/5"
                 >
-                  <Sparkles size={12} className="text-brand-gold animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.4em] text-brand-gold">Member of the Fold</span>
+                  <Sparkles size={14} className="text-brand-gold animate-float" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.6em] text-brand-gold">Consecrated Identity</span>
                 </motion.div>
                 
                 <div className="relative group">
@@ -187,22 +194,23 @@ export default function ProfilePage() {
                     {!isEditingInline ? (
                       <motion.div
                         key="display"
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-3"
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+                        className="flex items-center gap-6"
                       >
-                        <h1 className="text-4xl md:text-6xl font-serif italic text-white leading-tight tracking-tighter drop-shadow-lg">
-                          Shalom, <br />
+                        <h1 className="text-6xl md:text-8xl font-serif italic text-white leading-[0.85] tracking-tighter drop-shadow-2xl">
+                          Peace, <br />
                           <span className="text-brand-gold font-bold">{(user.displayName || 'Beloved').split(' ')[0]}</span>
                         </h1>
                         <Button 
                           variant="ghost" 
                           size="icon" 
                           onClick={() => setIsEditingInline(true)}
-                          className="text-white/40 hover:text-brand-gold hover:bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-all w-8 h-8"
+                          className="text-white/30 hover:text-brand-gold hover:bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-all w-12 h-12 border border-white/10"
                         >
-                          <Edit2 size={16} />
+                          <Edit2 size={20} />
                         </Button>
                       </motion.div>
                     ) : (
@@ -211,32 +219,32 @@ export default function ProfilePage() {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        className="flex items-center gap-3 bg-white/10 backdrop-blur-xl p-2 rounded-2xl border border-white/20 shadow-2xl"
+                        className="flex items-center gap-5 p-3 rounded-[40px] bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)]"
                       >
                         <Input 
                           value={tempName}
                           onChange={(e) => setTempName(e.target.value)}
-                          className="bg-transparent border-none text-white text-3xl md:text-4xl font-serif italic focus-visible:ring-0 w-full max-w-xs px-3 h-auto"
+                          className="bg-transparent border-none text-4xl md:text-6xl font-serif italic focus-visible:ring-0 w-full max-w-md px-6 h-auto text-white"
                           autoFocus
                           onKeyDown={(e) => e.key === 'Enter' && handleSaveName()}
                         />
-                        <div className="flex gap-1.5">
+                        <div className="flex gap-2 pr-2">
                           <Button 
                             variant="secondary" 
                             size="icon" 
                             onClick={handleSaveName}
                             disabled={saveLoading}
-                            className="rounded-lg bg-brand-gold text-white hover:bg-brand-gold/80 w-8 h-8"
+                            className="rounded-2xl bg-brand-gold text-white hover:bg-brand-gold/80 w-12 h-12 shadow-xl shadow-brand-gold/20"
                           >
-                            {saveLoading ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                            {saveLoading ? <Loader2 size={20} className="animate-spin" /> : <Check size={20} />}
                           </Button>
                           <Button 
                             variant="ghost" 
                             size="icon" 
                             onClick={() => setIsEditingInline(false)}
-                            className="rounded-lg text-white/60 hover:text-white w-8 h-8"
+                            className="rounded-2xl text-white/60 hover:text-white w-12 h-12 hover:bg-white/10"
                           >
-                            <X size={14} />
+                            <X size={20} />
                           </Button>
                         </div>
                       </motion.div>
@@ -247,40 +255,40 @@ export default function ProfilePage() {
             </div>
 
             <motion.div 
-              initial={{ y: 20, opacity: 0 }}
+              initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4"
+              transition={{ delay: 0.5 }}
+              className="flex flex-col sm:flex-row gap-5 mb-8 lg:mb-0"
             >
-              <Button asChild size="lg" className="px-8 py-6 brand-gradient text-white rounded-[20px] text-[10px] font-black uppercase tracking-[0.3em] shadow-3xl shadow-brand-olive/20 group hover:-translate-y-1.5 transition-all h-auto">
+              <Button asChild size="lg" className="h-20 px-10 brand-gradient text-white rounded-[28px] text-[11px] font-black uppercase tracking-[0.4em] shadow-[0_20px_50px_-10px_rgba(90,90,64,0.4)] group hover:-translate-y-2 transition-all duration-700 border-none">
                 <Link to="/notifications">
-                  Activity Records
-                  <Bell size={16} className="ml-2.5 group-hover:rotate-12 transition-transform" />
+                  Sacred Archive
+                  <Bell size={20} className="ml-4 group-hover:rotate-12 transition-transform" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" onClick={logout} className="px-8 py-6 bg-white border-brand-ink/5 text-brand-ink rounded-[20px] text-[10px] font-black uppercase tracking-[0.3em] hover:bg-brand-ink hover:text-white group shadow-xl hover:-translate-y-1.5 transition-all h-auto">
+              <Button variant="outline" size="lg" onClick={logout} className="h-20 px-10 bg-white/5 border-white/20 text-white rounded-[28px] text-[11px] font-black uppercase tracking-[0.4em] hover:bg-white hover:text-brand-ink group hover:-translate-y-2 transition-all duration-700 backdrop-blur-md">
                   Terminate Session
-                  <LogOut size={16} className="ml-2.5 group-hover:translate-x-1 transition-transform" />
+                  <LogOut size={20} className="ml-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white shadow-3xl shadow-brand-olive/5 rounded-[32px] p-3 border border-brand-olive/5">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 -mt-16 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white shadow-[0_50px_100px_-20px_rgba(40,40,20,0.1)] rounded-[48px] p-4 border-2 border-brand-olive/5">
            {[
-             { label: 'Cloud Verification', val: 'Entity Authenticated', icon: Shield, color: 'brand-gold' },
-             { label: 'Ecclesiastical Role', val: user.role === 'admin' ? 'Eldership Admin' : 'Faithful Layman', icon: Star, color: 'brand-olive' },
-             { label: 'Spiritual Tenure', val: 'Permanent Access', icon: Clock, color: 'brand-ink' }
+             { label: 'Sanctuary Verification', val: 'Entity Authenticated', icon: Shield, color: 'text-brand-gold' },
+             { label: 'Ecclesiastical Order', val: user.role === 'admin' ? 'Eldership Admin' : 'Faithful Layman', icon: Church, color: 'text-brand-olive' },
+             { label: 'Divine Tenure', val: 'Eternal Record', icon: Clock, color: 'text-brand-ink' }
            ].map((stat, i) => (
-             <div key={stat.label} className="flex items-center gap-4 p-5 rounded-[24px] hover:bg-brand-cream/30 transition-all group">
-                <div className={`w-12 h-12 rounded-xl bg-brand-cream flex items-center justify-center text-${stat.color} group-hover:rotate-12 transition-transform shadow-inner`}>
-                   <stat.icon size={20} />
+             <div key={stat.label} className="flex items-center gap-6 p-6 rounded-[36px] hover:bg-brand-cream/40 transition-all duration-700 group border border-transparent hover:border-brand-olive/5">
+                <div className={`w-16 h-16 rounded-2xl bg-brand-cream flex items-center justify-center ${stat.color} group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 shadow-sm border border-brand-olive/5`}>
+                   <stat.icon size={24} />
                 </div>
                 <div>
-                   <p className="text-[9px] font-black uppercase tracking-[0.4em] text-brand-ink/30 mb-0.5">{stat.label}</p>
-                   <p className="text-xs font-bold text-brand-ink">{stat.val}</p>
+                   <p className="text-[10px] font-black uppercase tracking-[0.5em] text-brand-ink/30 mb-1.5">{stat.label}</p>
+                   <p className="text-sm md:text-base font-serif italic text-brand-ink">{stat.val}</p>
                 </div>
              </div>
            ))}
@@ -292,15 +300,15 @@ export default function ProfilePage() {
           
           {/* Left Column: Account Summary */}
           <div className="lg:col-span-1 space-y-8">
-            <Card className="rounded-[32px] p-8 border-brand-olive/5 shadow-2xl bg-white relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-brand-gold/5 blur-2xl rounded-full -translate-y-1/2 translate-x-1/2 transition-all group-hover:scale-150" />
+            <Card className="rounded-[40px] p-10 border-2 border-brand-olive/5 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] bg-white relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/5 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 transition-all duration-1000 group-hover:scale-150" />
               
-              <div className="flex justify-between items-center mb-8 relative z-10">
-                <h2 className="text-xl font-serif italic text-brand-ink">Sanctuary Register</h2>
+              <div className="flex justify-between items-center mb-10 relative z-10">
+                <h2 className="text-2xl font-serif italic text-brand-ink">Sanctuary Registry</h2>
                 <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="w-9 h-9 rounded-xl bg-brand-cream text-brand-olive hover:bg-brand-olive hover:text-white shadow-sm">
-                      <Edit2 size={14} />
+                    <Button variant="ghost" size="icon" className="w-12 h-12 rounded-2xl bg-brand-cream text-brand-olive hover:bg-brand-olive hover:text-white shadow-sm border border-brand-olive/5 transition-all duration-500">
+                      <Edit2 size={18} />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md rounded-[32px] p-8 bg-white border-brand-olive/5 shadow-4xl">
@@ -428,28 +436,30 @@ export default function ProfilePage() {
           <div className="lg:col-span-2 space-y-8">
             
             {/* Quick Metrics */}
-            <div className="grid sm:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-3 gap-6">
               {[
                 { title: 'Divine RSVPs', icon: Bookmark, count: 'Inactive', path: '#' },
                 { 
                   title: 'Seeds Sown', 
-                  icon: Receipt, 
+                  icon: Heart, 
                   count: `GH₵ ${donations.reduce((sum, d) => sum + d.amount, 0).toLocaleString()}`, 
                   path: '/donations' 
                 },
                 { 
                   title: 'Spiritual Events', 
-                  icon: Clock, 
+                  icon: Sparkles, 
                   count: activities.length.toString(), 
                   path: '/notifications' 
                 },
               ].map((item, i) => (
-                <Link key={item.title} to={item.path} className="bg-white p-8 rounded-[32px] border border-brand-olive/5 shadow-2xl hover:shadow-3xl hover:-translate-y-1.5 transition-all group block relative overflow-hidden">
-                   <item.icon size={24} className="text-brand-olive mb-6 group-hover:scale-125 transition-transform duration-500" />
-                   <p className="text-[10px] uppercase tracking-[0.4em] font-black text-brand-ink/20 mb-1.5">{item.title}</p>
-                   <p className="text-3xl font-serif italic text-brand-ink">{item.count}</p>
-                   <div className="absolute top-0 right-0 p-5 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ArrowRight size={18} className="text-brand-gold" />
+                <Link key={item.title} to={item.path} className="bg-white p-10 rounded-[40px] border-2 border-brand-olive/5 shadow-[0_30px_60px_-15px_rgba(40,40,20,0.08)] hover:shadow-[0_50px_100px_-20px_rgba(90,90,64,0.15)] hover:-translate-y-2 transition-all duration-700 group block relative overflow-hidden">
+                   <div className="w-14 h-14 bg-brand-cream rounded-2xl flex items-center justify-center text-brand-gold mb-8 shadow-sm group-hover:scale-110 group-hover:rotate-12 transition-all duration-700">
+                      <item.icon size={26} />
+                   </div>
+                   <p className="text-[10px] uppercase tracking-[0.5em] font-black text-brand-ink/20 mb-2">{item.title}</p>
+                   <p className="text-4xl font-serif italic text-brand-ink tracking-tight">{item.count}</p>
+                   <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-x-4 group-hover:translate-x-0">
+                      <ArrowRight size={22} className="text-brand-gold" />
                    </div>
                 </Link>
               ))}
