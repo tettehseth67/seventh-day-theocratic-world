@@ -1432,7 +1432,7 @@ export default function AdminPage() {
                   <div className="space-y-1.5">
                     <Label htmlFor="priority" className="text-[9px] uppercase tracking-widest font-bold text-brand-ink/40 ml-1">Theocratic Priority</Label>
                     <div className="relative">
-                      <select id="priority" name="priority" defaultValue={editingItem?.priority || 'Low'} className="w-full h-12 px-4 rounded-xl bg-brand-cream border-none text-sm font-bold text-brand-ink focus:ring-2 focus:ring-brand-olive/20 outline-none appearance-none">
+                      <select id="priority" name="priority" defaultValue={editingItem?.priority || 'Low'} required className="w-full h-12 px-4 rounded-xl bg-brand-cream border-none text-sm font-bold text-brand-ink focus:ring-2 focus:ring-brand-olive/20 outline-none appearance-none">
                          <option value="High">High Priority</option>
                          <option value="Medium">Medium Priority</option>
                          <option value="Low">Low Priority</option>

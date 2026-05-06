@@ -124,7 +124,7 @@ export default function VisionMission() {
                className="h-16 md:h-18 px-10 md:px-12 rounded-2xl md:rounded-3xl border-brand-olive/10 text-brand-olive text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] hover:bg-brand-olive hover:text-white transition-all duration-700 w-full sm:w-auto"
                asChild
             >
-               <Link to="/about">Explore Sacred Charter</Link>
+               <Link to="/about">Explore Our Ministry</Link>
             </Button>
           </div>
 

@@ -43,7 +43,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
+    { name: 'Ministry', href: '/about' },
     { name: 'Events', href: '/events' },
     { name: 'Sermons', href: '/sermons' },
     { name: 'Livestream', href: '/livestream' },

@@ -13,7 +13,7 @@
         "priority": { "type": "string", "enum": ["High", "Medium", "Low"], "description": "Priority level of the event" },
         "thumbnail": { "type": "string", "description": "URL for event thumbnail image" }
       },
-      "required": ["title", "date", "description", "category"]
+      "required": ["title", "date", "time", "description", "category", "priority"]
     },
     "Sermon": {
       "title": "Sermon",
